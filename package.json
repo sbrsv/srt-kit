@@ -1,0 +1,13 @@
+{
+  "name": "srt-kit",
+  "version": "0.1.0",
+  "description": "Zero-dependency CLI for working with SRT subtitle files.",
+  "type": "module",
+  "bin": { "srt-kit": "./bin/srt-kit.js" },
+  "scripts": {
+    "test": "node --test \"test/**/*.test.js\""
+  },
+  "keywords": ["srt", "subtitles", "captions", "cli"],
+  "license": "MIT",
+  "engines": { "node": ">=18" }
+}
