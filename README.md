@@ -18,7 +18,7 @@ cd srt-kit && npm link
 
 ## Commands
 
-### `shift` â€” move every cue in time
+### `shift` Ã¢â‚¬â€ move every cue in time
 
 ```bash
 srt-kit shift movie.srt 2.5s -o fixed.srt
@@ -29,17 +29,29 @@ Offsets take milliseconds by default; `s` and `ms` suffixes both work, and a
 leading `-` shifts subtitles earlier. Cues never move before `00:00:00,000`.
 Without `-o` the result goes to stdout, so it pipes.
 
-### `strip` — pull the plain text out
+### `strip` â€” pull the plain text out
 
 ```bash
 srt-kit strip movie.srt -o transcript.txt
 srt-kit strip movie.srt --keep-breaks
 ```
 
-Drops indices and timings and leaves one cue per line — handy for word
+Drops indices and timings and leaves one cue per line â€” handy for word
 counts, translation passes or feeding a transcript to something else. By
 default a cue's internal line breaks are flattened to spaces;
 `--keep-breaks` preserves them.
+
+### `fix` — repair a broken subtitle file
+
+```bash
+srt-kit fix movie.srt -o clean.srt
+srt-kit fix movie.srt --min-duration 500
+```
+
+Reorders cues that arrived out of sequence, pushes apart cues that overlap,
+extends zero-length and backwards cues to a minimum duration (200ms by
+default) and resequences the indices. What it repaired is reported on
+stderr, so the fixed file still pipes cleanly on stdout.
 
 ## Library use
 
@@ -53,7 +65,7 @@ const cues = parse(await readFile('movie.srt', 'utf8'));
 ```
 
 Timings are milliseconds. The parser tolerates CRLF line endings, a leading
-BOM, missing index lines and stray blank lines between blocks â€” all of which
+BOM, missing index lines and stray blank lines between blocks Ã¢â‚¬â€ all of which
 show up in real subtitle files from the wild.
 
 ## Tests
