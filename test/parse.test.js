@@ -41,3 +41,37 @@ test('format renumbers output sequentially', () => {
   cues[0].index = 99;
   assert.match(format(cues), /^1\n00:00:01,000/);
 });
+
+test('keeps a cue whose identifier is not a number', () => {
+  const cues = parse(`intro
+00:00:01,000 --> 00:00:03,000
+Hello there.
+
+00:00:04,000 --> 00:00:05,000
+Second.
+`);
+  assert.equal(cues.length, 2);
+  assert.equal(cues[0].text, 'Hello there.');
+  assert.equal(cues[0].index, 1);
+});
+
+test('still skips blocks that are not cues at all', () => {
+  const cues = parse(`WEBVTT
+
+NOTE a comment block
+
+00:00:01,000 --> 00:00:03,000
+Hello there.
+`);
+  assert.equal(cues.length, 1);
+  assert.equal(cues[0].text, 'Hello there.');
+});
+
+test('does not treat cue text as an identifier', () => {
+  const cues = parse(`1
+00:00:01,000 --> 00:00:03,000
+Hello there.
+Second line.
+`);
+  assert.equal(cues[0].text, 'Hello there.\nSecond line.');
+});
