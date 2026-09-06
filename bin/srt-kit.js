@@ -1,11 +1,13 @@
 #!/usr/bin/env node
 import { readFileSync, writeFileSync } from 'node:fs';
 import { shift, parseOffset } from '../src/commands/shift.js';
+import { strip } from '../src/commands/strip.js';
 
 const USAGE = `srt-kit — tools for SRT subtitle files
 
 Usage:
   srt-kit shift <file> <offset> [-o out.srt]
+  srt-kit strip <file> [--keep-breaks] [-o out.txt]
 
 Offsets accept ms (default) or seconds: 1500, 1500ms, 2.5s, -2s.
 Without -o the result is written to stdout.
@@ -43,6 +45,13 @@ function main(argv) {
     const [file, offset] = rest;
     if (!file || !offset) throw new Error('shift needs a file and an offset');
     output(shift(readInput(file), parseOffset(offset)), rest);
+    return;
+  }
+
+  if (command === 'strip') {
+    const [file] = rest;
+    if (!file) throw new Error('strip needs a file');
+    output(strip(readInput(file), { keepLineBreaks: rest.includes('--keep-breaks') }), rest);
     return;
   }
 
