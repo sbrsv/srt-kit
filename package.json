@@ -5,7 +5,7 @@
   "type": "module",
   "bin": { "srt-kit": "./bin/srt-kit.js" },
   "scripts": {
-    "test": "node --test \"test/**/*.test.js\""
+    "test": "node scripts/test.js"
   },
   "keywords": ["srt", "subtitles", "captions", "cli"],
   "license": "MIT",
