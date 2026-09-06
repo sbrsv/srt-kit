@@ -1,5 +1,7 @@
 # srt-kit
 
+[![test](https://github.com/sbrsv/srt-kit/actions/workflows/test.yml/badge.svg)](https://github.com/sbrsv/srt-kit/actions/workflows/test.yml)
+
 A zero-dependency CLI for working with SRT subtitle files. No install step,
 no `node_modules`, just Node 18+.
 
@@ -73,6 +75,8 @@ show up in real subtitle files from the wild.
 ```bash
 npm test
 ```
+
+CI runs the suite plus a CLI smoke test on Node 18, 20 and 22.
 
 ## License
 
