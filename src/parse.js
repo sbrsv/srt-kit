@@ -18,8 +18,14 @@ export function parse(source) {
 
     let cursor = 0;
     let index = cues.length + 1;
-    if (!ARROW.test(lines[cursor]) && /^\d+$/.test(lines[cursor].trim())) {
-      index = Number(lines[cursor].trim());
+
+    // A block may open with an identifier line. SRT uses a number; WebVTT
+    // allows an arbitrary string. Consume either, but only when the line
+    // that follows is a timing line -- otherwise this is not a cue at all
+    // (a WEBVTT header, a NOTE block) and the whole block is skipped below.
+    if (!ARROW.test(lines[cursor]) && lines[cursor + 1] !== undefined && ARROW.test(lines[cursor + 1])) {
+      const identifier = lines[cursor].trim();
+      if (/^\d+$/.test(identifier)) index = Number(identifier);
       cursor += 1;
     }
 
