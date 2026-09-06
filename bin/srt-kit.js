@@ -2,12 +2,14 @@
 import { readFileSync, writeFileSync } from 'node:fs';
 import { shift, parseOffset } from '../src/commands/shift.js';
 import { strip } from '../src/commands/strip.js';
+import { fix } from '../src/commands/fix.js';
 
 const USAGE = `srt-kit — tools for SRT subtitle files
 
 Usage:
   srt-kit shift <file> <offset> [-o out.srt]
   srt-kit strip <file> [--keep-breaks] [-o out.txt]
+  srt-kit fix <file> [--min-duration ms] [-o out.srt]
 
 Offsets accept ms (default) or seconds: 1500, 1500ms, 2.5s, -2s.
 Without -o the result is written to stdout.
@@ -52,6 +54,21 @@ function main(argv) {
     const [file] = rest;
     if (!file) throw new Error('strip needs a file');
     output(strip(readInput(file), { keepLineBreaks: rest.includes('--keep-breaks') }), rest);
+    return;
+  }
+
+  if (command === 'fix') {
+    const [file] = rest;
+    if (!file) throw new Error('fix needs a file');
+    const i = rest.indexOf('--min-duration');
+    const opts = i === -1 ? {} : { minDuration: Number(rest[i + 1]) };
+    if (opts.minDuration !== undefined && !Number.isFinite(opts.minDuration)) {
+      throw new Error('--min-duration expects a number of milliseconds');
+    }
+    const { output: text, repairs } = fix(readInput(file), opts);
+    output(text, rest);
+    for (const repair of repairs) process.stderr.write(`fixed: ${repair}\n`);
+    if (repairs.length === 0) process.stderr.write('nothing to fix\n');
     return;
   }
 
